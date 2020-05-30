@@ -1,9 +1,7 @@
 //
-//  IEX.h
-//  IEX
+//  Copyright © 2020 Jackson Utsch.
 //
-//  Created by admin on 5/30/20.
-//  Copyright © 2020 Jackson Utsch. All rights reserved.
+//  Licensed under the MIT license.
 //
 
 #import <Foundation/Foundation.h>
