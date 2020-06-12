@@ -1,5 +1,5 @@
 # IEXSwift
-A Swift API for IEX
+A Swift wrapper for IEX
 
 ## Usage
 
@@ -46,7 +46,7 @@ if let baPrice = IEX.shared?.priceOnly(symbol: "BA") {
 
 ```
 
-API matches IEX stock documentation found <a href="https://iexcloud.io/docs/api/#stock-prices">here</a>
+Wrapper matches IEX stock documentation found <a href="https://iexcloud.io/docs/api/#stock-prices">here</a>
 
 ## License (MIT)
 
