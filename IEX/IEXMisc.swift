@@ -12,13 +12,13 @@ import Foundation
 
 extension IEX {
     
-    public struct IEXBidAsk: Codable {
+    public struct BidAsk: Codable {
         let price: Double?
         let size: Double?
         let timeStamp: Double?
     }
 
-    public struct IEXTrade: Codable {
+    public struct Trade: Codable {
         let price: Double?
         let size: Double?
         let tradeId: Double?
@@ -30,12 +30,12 @@ extension IEX {
         let timeStamp: Double?
     }
 
-    public struct IEXSystemEvent: Codable {
+    public struct SystemEvent: Codable {
         let systemEvent: String?
         let timestamp: Double?
     }
 
-    public struct IEXPricePoint: Codable {
+    public struct PricePoint: Codable {
         let price: Double?
         let time: Double?
     }

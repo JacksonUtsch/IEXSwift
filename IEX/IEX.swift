@@ -21,7 +21,7 @@ public class IEX {
         version = .stable
     }
     
-    func getEndpoint<T: Decodable>(_ path: String, as type: T.Type) -> T? {
+    public func getEndpoint<T: Decodable>(_ path: String, as type: T.Type) -> T? {
         do {
             let data = try getJSON(from: path)
             
@@ -50,12 +50,12 @@ public class IEX {
     
 }
 
-enum JSONError: Error {
+public enum JSONError: Error {
     case invalidURL
 }
 
 /// retrieves JSON from string url
-func getJSON(from stringURL: String) throws -> Data {
+public func getJSON(from stringURL: String) throws -> Data {
     var jsonData: Data?
     var jsonError: Error?
     

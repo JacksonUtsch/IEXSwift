@@ -16,16 +16,16 @@ import Foundation
 extension IEX {
 
     /// docs - https://iexcloud.io/docs/api/#book
-    public struct IEXBook: Codable {
-        let quote: IEXQuote?
-        let bids: [IEXBidAsk]?
-        let asks: [IEXBidAsk]?
-        let trades: [IEXTrade]?
-        let systemEvent: IEXSystemEvent?
+    public struct Book: Codable {
+        let quote: Quote?
+        let bids: [BidAsk]?
+        let asks: [BidAsk]?
+        let trades: [Trade]?
+        let systemEvent: SystemEvent?
     }
 
     /// docs - https://iexcloud.io/docs/api/#delayed-quote
-    public struct IEXDelayedQuote: Codable {
+    public struct DelayedQuote: Codable {
         let symbol: String?
         let delayedPrice: Double?
         let high: Double?
@@ -40,7 +40,7 @@ extension IEX {
     // MARK: Extended Hours Quote = Quote
 
     /// docs - https://iexcloud.io/docs/api/#historical-prices
-    public struct IEXHistoricalPrice: Codable {
+    public struct HistoricalPrice: Codable {
         let date: String?
         let high: Double?
         let low: Double?
@@ -59,13 +59,13 @@ extension IEX {
     }
 
     /// docs - https://iexcloud.io/docs/api/#historical-prices
-    public struct IEXHistoricalPricesDynamic: Codable {
+    public struct HistoricalPricesDynamic: Codable {
         let range: String?
-        let data: [IEXHistoricalPrice]?
+        let data: [HistoricalPrice]?
     }
 
     /// docs - https://iexcloud.io/docs/api/#intraday-prices
-    public struct IEXIntradayPrice: Codable {
+    public struct IntradayPrice: Codable {
         let date: String?
         let minute: String?
         let marketAverage: Double?
@@ -89,7 +89,7 @@ extension IEX {
     }
 
     /// docs - https://iexcloud.io/docs/api/#largest-trades
-    public struct IEXLargestTrade: Codable {
+    public struct LargestTrade: Codable {
         let price: Double?
         let size: Double?
         let time: Double?
@@ -99,15 +99,15 @@ extension IEX {
     }
 
     /// docs - https://iexcloud.io/docs/api/#ohlc
-    public struct IEXOHLC: Codable {
-        let open: IEXPricePoint?
-        let close: IEXPricePoint?
+    public struct OHLC: Codable {
+        let open: PricePoint?
+        let close: PricePoint?
         let high: Double?
         let low: Double?
     }
 
     /// docs - https://iexcloud.io/docs/api/#previous-day-price
-    public struct IEXPreviousDayPrice: Codable {
+    public struct PreviousDayPrice: Codable {
         let symbol: String?
         let date: String?
         let high: Double?
@@ -127,7 +127,7 @@ extension IEX {
     }
 
     /// docs - https://iexcloud.io/docs/api/#quote
-    public struct IEXQuote: Codable {
+    public struct Quote: Codable {
         let latestPrice: Double?
         let latestVolume: Double?
         let latestUpdate: Double?
@@ -175,7 +175,7 @@ extension IEX {
     }
 
     /// docs - https://iexcloud.io/docs/api/#volume-by-venue
-    public struct IEXVolumeByVenue: Codable {
+    public struct VolumeByVenue: Codable {
         let volume: Double?
         let venue: String?
         let venueName: String?
@@ -187,54 +187,54 @@ extension IEX {
 
 extension IEX {
     
-    public func book(symbol: String) -> IEXBook? {
+    public func book(symbol: String) -> Book? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "book" + "?token=\(apiKey)"
-        return getEndpoint(path, as: IEXBook.self)
+        return getEndpoint(path, as: Book.self)
     }
     
-    public func delayedQuote(symbol: String, queryParams: String?) -> IEXDelayedQuote? {
+    public func delayedQuote(symbol: String, queryParams: String?) -> DelayedQuote? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "delayed-quote" + "?token=\(apiKey)" & (queryParams ?? "")
-        return getEndpoint(path, as: IEXDelayedQuote.self)
+        return getEndpoint(path, as: DelayedQuote.self)
     }
     
     /// docs - https://iexcloud.io/docs/api/#extended-hours-quote
     // MARK: Extended Hours Quote = Quote
     
     /// Range.dynamic ignores additional range object from iex for simplicity sake
-    public func historicalPrices(symbol: String, range: Range) -> [IEXHistoricalPrice]? {
+    public func historicalPrices(symbol: String, range: Range) -> [HistoricalPrice]? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "chart" / range.rawValue + "?token=\(apiKey)"
         if range == .dynamic {
-            let dynamic = getEndpoint(path, as: IEXHistoricalPricesDynamic.self)
+            let dynamic = getEndpoint(path, as: HistoricalPricesDynamic.self)
             return dynamic?.data
         } else {
-            return getEndpoint(path, as: [IEXHistoricalPrice].self)
+            return getEndpoint(path, as: [HistoricalPrice].self)
         }
     }
     
-    public func historicalPrices(symbol: String, date: String) -> [IEXHistoricalPrice]? {
+    public func historicalPrices(symbol: String, date: String) -> [HistoricalPrice]? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "chart" / "date" / date + "?token=\(apiKey)"
-        return getEndpoint(path, as: [IEXHistoricalPrice].self)
+        return getEndpoint(path, as: [HistoricalPrice].self)
     }
     
-    public func intradayPrices(symbol: String, queryParams: String?) -> [IEXIntradayPrice]? {
+    public func intradayPrices(symbol: String, queryParams: String?) -> [IntradayPrice]? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "intraday-prices" + "?token=\(apiKey)" & (queryParams ?? "")
-        return getEndpoint(path, as: [IEXIntradayPrice].self)
+        return getEndpoint(path, as: [IntradayPrice].self)
     }
     
-    public func largestTrades(symbol: String) -> [IEXLargestTrade]? {
+    public func largestTrades(symbol: String, params: String?) -> [LargestTrade]? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "largest-trades" + "?token=\(apiKey)"
-        return getEndpoint(path, as: [IEXLargestTrade].self)
+        return getEndpoint(path, as: [LargestTrade].self)
     }
     
-    public func ohlc(symbol: String) -> IEXOHLC? {
+    public func ohlc(symbol: String) -> OHLC? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "ohlc" + "?token=\(apiKey)"
-        return getEndpoint(path, as: IEXOHLC.self)
+        return getEndpoint(path, as: OHLC.self)
     }
     
     // could add market option, its costly.. ~17k messages
-    public func previousDayPrice(symbol: String) -> IEXPreviousDayPrice? {
+    public func previousDayPrice(symbol: String) -> PreviousDayPrice? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "previous" + "?token=\(apiKey)"
-        return getEndpoint(path, as: IEXPreviousDayPrice.self)
+        return getEndpoint(path, as: PreviousDayPrice.self)
     }
     
     public func priceOnly(symbol: String) -> Double? {
@@ -242,13 +242,13 @@ extension IEX {
         return getEndpoint(path, as: Double.self)
     }
     
-    public func quote(symbol: String) -> IEXQuote? {
+    public func quote(symbol: String) -> Quote? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "largest-trades" + "?token=\(apiKey)"
-        return getEndpoint(path, as: IEXQuote.self)
+        return getEndpoint(path, as: Quote.self)
     }
     
-    public func volumeByVenue(symbol: String) -> [IEXVolumeByVenue]? {
+    public func volumeByVenue(symbol: String) -> [VolumeByVenue]? {
         let path = baseURL.rawValue / version.rawValue / "stock" / symbol / "volume-by-venue" + "?token=\(apiKey)"
-        return getEndpoint(path, as: [IEXVolumeByVenue].self)
+        return getEndpoint(path, as: [VolumeByVenue].self)
     }
 }
